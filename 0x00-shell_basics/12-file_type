@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "The file type of iamafile is: $file_type"
+echo "The file type of iamafile is: $file_type">/tmp
