@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -A1 | sort -d -k1.1,1.1 -k1.2n -t/ | awk '{ORS=NR%2?",":"\n"}1'
+ls -xamp
