@@ -1,2 +1,2 @@
 #!/bin/bash
-telnet ascii.starwars.website
+telnet towel.blinkenlights.nl
