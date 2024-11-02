@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
-# The script.
-pid=$(pgrep -f 100-process_and_pid_file)
-echo "$pid" > holbertonscript.pid
-sudo mv ./holbertonscript.pid /var/run/
-while ((1)); do
-    echo "To infinity and beyond"
-    trap 'echo "I hate the kill command" && sudo rm "/var/run/holbertonscript.pid" && kill -SIGKILL $pid' SIGTERM
-    trap 'echo "Y U no love me?!"' SIGINT
+#
+# To infinity and beyond...
+# Write PID to pidfile (default '/var/run/holbertonscript.pid')
+# Remove pidfile and exit upon receiving SIGTERM or SIGQUIT
+
+sleep() {
+  ! read -rt "$1"
+} <> <(:)
+
+echo "$$" >| "${pidfile:=/var/run/holbertonscript.pid}"
+
+trap '
+  echo "Y U no love me?!"
+' INT
+trap '
+  rm -f "${pidfile}" 2>/dev/null
+  exit 131
+' QUIT
+trap '
+  echo "I hate the kill command"
+  rm -f "${pidfile}" 2>/dev/null
+  exit 143
+' TERM
+
+while true
+do
+  echo 'To infinity and beyond'
+  sleep 2
 done
