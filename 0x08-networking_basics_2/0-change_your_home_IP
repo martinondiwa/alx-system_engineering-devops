@@ -1,10 +1,22 @@
 #!/usr/bin/env bash
-# Script that configures an Ubuntu server with the below requirements.
+#
+# Configure resolution of localhost to 127.0.0.2 and facebook.com to 8.8.8.8
 
-# localhost resolves to 127.0.0.2
-# facebook.com resolves to 8.8.8.8
+if (( ${UID:-$(id -u)} ))
+then
+  echo 'Must be run as root'
+  exit 1
+fi
 
-cp /etc/hosts ~/hosts.new
-sed -i 's/127.0.0.1/127.0.0.2/' ~/hosts.new
-sed -i '2i8.8.8.8 facebook.com' ~/hosts.new
-cp -f ~/hosts.new /etc/hosts
+if ! tempfile="$(mktemp)"
+then
+  echo 'Unable to create temporary file'
+  exit 1
+fi
+
+{ printf '%s\t%s\n' 127.0.0.2 localhost
+  printf '%s\t%s\n' 8.8.8.8   facebook.com
+  cat /etc/hosts
+} > "${tempfile}"
+
+cat -- "${tempfile}" > /etc/hosts
