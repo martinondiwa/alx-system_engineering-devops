@@ -1,4 +1,4 @@
-ustom HTTP header in a nginx server
+# Custom HTTP header in a nginx server
 
 # update ubuntu server
 exec { 'update server':
