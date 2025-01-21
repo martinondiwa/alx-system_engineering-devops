@@ -1,23 +1,10 @@
 #!/usr/bin/env bash
-# Configures a new HAproxy as a load balancer
+# configures load balancer for the 2 servers
 
-# Update package lists
-apt-get -y update
-
-# Install HAproxy (optional: specify version if necessary)
-apt-get -y install haproxy
-
-# Configure haproxy to distribute requests using a roundrobin algorithm
-cat <<EOF >> /etc/haproxy/haproxy.cfg
-frontend sammykingx.tech
-    bind *:80
-    default_backend web_servers
-
-backend web_servers
-    balance roundrobin
-    server 64820-web-01 100.26.152.157:80 check
-    server 64820-web-02 52.86.102.6:80 check
-EOF
-
-# Restart HAproxy service
-systemctl restart haproxy
+sudo apt-get -y update
+sudo apt-get install --no-install-recommends software-properties-common
+sudo add-apt-repository ppa:vbernat/haproxy-2.7
+sudo apt-get install haproxy=2.7.\*
+sudo sed -i -e '$aENABLED=1\n' /etc/default/haproxy 
+sudo echo -e "\nfrontend http\n\tbind *:80\n\tmode http\n\tdefault_backend web-backend\n\nbackend web-backend\n\tbalance roundrobin\n\tserver 110043-web-01 34.229.67.178  check\n\tserver 110043-02 35.175.129.69 check" /etc/haproxy/haproxy.cfg
+sudo service haproxy restart
