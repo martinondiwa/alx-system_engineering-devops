@@ -1,0 +1,2 @@
+rm: cannot remove '/etc/nginx/sites-enables/default': No such file or directory
+ln: failed to create symbolic link '/etc/nginx/sites-enabled/default': File exists

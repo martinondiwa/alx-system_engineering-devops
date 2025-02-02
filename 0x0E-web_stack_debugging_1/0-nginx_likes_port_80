@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# nginx likes port 80
-#this is spam
-#this is spam
-
-apt-get update -y 
-apt-get install -y nginx
-
-sudo service nginx enable
-sudo service nginx start
-
+# debugging nginx on port 80
+# start removing the default nginx cong file
+# conf nginx at port 80 with ipv4
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo service nginx restart
