@@ -1,25 +1,16 @@
 #!/usr/bin/env bash
-# Configure your domain zone so that the subdomain www points to your load-balancer IP
+# displays the information about the subdomains
 
-
-excute () {
-        RECORD_TYPE=$(dig "$2"."$1" | awk 'BEGIN{OFS=" ";} /^'$2'/{print $4}')
-        DESTINATION=$(dig "$2"."$1" | awk 'BEGIN{OFS=" ";} /^'$2'/{print $5}')
-        echo "The subdomain $2 is a $RECORD_TYPE record and points to $DESTINATION"
-}
-domain=$1
-subdomain=$2
-sub=( www lb-01 web-01 web-02 )
-check () {
-    if [[ $subdomain == "" ]]
+func () {
+    if [ -n "$2" ]
     then
-        for x in "${sub[@]}"
-        do
-            excute "$domain" "$x"
-        done
+	dig "$2.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk -v sd="$2" '{print "The subdomain " sd " is a " $7 " record and points to " $8}'
     else
-        excute "$domain" "$subdomain"
+	dig "www.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain www is a " $7 " record and points to " $8}'
+	dig "lb-01.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain lb-01 is a " $7 " record and points to " $8}'
+	dig "web-01.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain web-01 is a " $7 " record and points to " $8}'
+	dig "web-02.$1" | grep -A1 'ANSWER SECTION:' | paste - - | awk '{print "The subdomain web-02 is a " $7 " record and points to " $8}'
     fi
-    return 0
 }
-check
+
+func "$1" "$2"
