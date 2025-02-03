@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# debugging nginx on port 80
+# start removing the default nginx cong file
+# conf nginx at port 80 with ipv4
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo service nginx restart

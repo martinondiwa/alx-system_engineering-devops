@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> dc7deca09c2bf999d3e1ba8db2dcfaae16d84e16
 global
         log /dev/log    local0
         log /dev/log    local1 notice
@@ -7,6 +10,7 @@ global
         stats timeout 30s
         user haproxy
         group haproxy
+<<<<<<< HEAD
         daemon
 
 
@@ -43,3 +47,5 @@ backend my_backend_1
         balance roundrobin
         server 914-web-01 35.196.96.41:80 check
         server 914-web-02 3.234.218.189:80 check
+=======
+>>>>>>> dc7deca09c2bf999d3e1ba8db2dcfaae16d84e16
