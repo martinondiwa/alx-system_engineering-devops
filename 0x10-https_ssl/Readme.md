@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+equirements
+=======
 Resources
 Read or watch:
 
@@ -18,6 +21,7 @@ What is HTTPS SSL 2 main roles
 What is the purpose encrypting traffic
 What SSL termination means
 Requirements
+>>>>>>> dc7deca09c2bf999d3e1ba8db2dcfaae16d84e16
 General
 Allowed editors: vi, vim, emacs
 All your files will be interpreted on Ubuntu 16.04 LTS
