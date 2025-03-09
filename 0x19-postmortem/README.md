@@ -1,36 +1,63 @@
-Postmortem: Database Connection Failure in TripGwiji App
+#0x19-postmortem task using webstack debugging #1
 
-Issue Summary
-Duration: September 18, 2024, 14:15 EAT - 15:05 EAT (50 minutes)
-Impact: Users were unable to generate trips in the TripGwiji app. Approximately 85% of users experienced errors when submitting their trip preferences.
 
-Root Cause: 
-A misconfigured database connection pool caused a bottleneck, leading to exhaustion of available connections and failure to process requests.
 
-Timeline
-14:15 - Monitoring system alerted high API failure rates for trip generation.
-14:18 - Engineers began investigating the backend logs.
-14:25 - Assumption: Third-party API issue causing timeouts. Engineers tested API response times.
-14:35 - Noticed repeated database connection errors in logs. Assumed database server was down.
-14:40 - Database was reachable, but connection pool metrics showed exhaustion.
-14:45 - Escalated to the database team for further analysis.
-14:55 - Identified root cause: misconfigured connection pool settings limiting available connections.
-15:00 - Adjusted connection pool settings and restarted backend services.
-15:05 - System restored, and users could generate trips again.
+![image](https://github.com/user-attachments/assets/c293cba8-dd14-46ef-b649-d06595a1eb15)
 
-Root Cause and Resolution
-Root Cause
-The database connection pool was misconfigured with a maximum connection limit set too low (default limit of 10 active connections). As the user load increased, all available connections were quickly exhausted, causing requests to fail when new connections could not be established.
-Resolution
-Increased the database connection pool size to 50 active connections.
-Implemented connection timeout handling to recycle unused connections.
-Restarted backend services to apply the new settings.
 
-Corrective and Preventative Measures
-Improvements Needed
-Optimize database connection pool settings for scalability.
-Implement more robust monitoring on database connection usage.
-Improve alerting thresholds for database failures to detect issues earlier.
+# Issue Summary
+Duration of the Outage: The outage started at 11:45 AM and was resolved by 12:45 PM West African Time.
 
-Conclusion: This outage highlighted the importance of proper database connection management and proactive monitoring. Moving forward, we will implement connection scaling, monitoring improvements, and documentation updates to mitigate similar issues in the future.
+# Impact:
+The site was not listening on port 80, causing all users to be unable to access the website.
 
+# Root Cause:
+The Nginx server's site settings were not properly linked. Specifically, the sites-available configuration was not linked to sites-enabled, meaning the configuration was correct but not activated, preventing users from accessing the site.
+
+# Timeline
+11:45 AM: The issue was detected when ALX (the platform) attempted to access the website and found it unresponsive.
+
+11:50 AM: ALX monitoring alerts indicated that the site was down, and the issue was escalated to me.
+
+11:55 AM: Initial investigation focused on checking the Nginx configuration files for errors, but no errors were found in the configuration itself.
+
+12:15 PM: Further investigation led to checking which service was listening on port 80. It was then discovered that the Nginx configuration in sites-available was not linked to sites-enabled.
+
+12:30 PM: The default configuration was correctly linked in sites-enabled, and Nginx was restarted to apply the changes.
+
+12:45 PM: The issue was resolved, and the site was back online.
+
+# Root Cause and Resolution
+# Root Cause:
+The root cause was the failure to link the sites-available configuration to sites-enabled, meaning the Nginx server configuration was not active despite being correct.
+
+# Resolution:
+The issue was resolved by linking the default configuration from sites-available to sites-enabled and restarting the Nginx service.
+
+# Corrective and Preventative Measures
+
+# Improvements:
+Ensuring that after any configuration changes, a script or automated check is run to confirm that the necessary configurations are linked and active.
+Improve the monitoring system to detect such issues earlier.
+
+# Task List:
+
+Create and execute a script to link the sites-available configuration to sites-enabled after each configuration change.
+Add a monitoring check to ensure that Nginx is correctly listening on port 80.
+
+# Example Script
+Here is the script i mentioned to ensure the configuration is always active:
+
+______________________________________________________________
+[bash]
+(Copy code)
+#!/usr/bin/env bash
+# Ensure Nginx is properly configured and listening on port 80
+
+cat /etc/nginx/sites-available/default > /etc/nginx/sites-enabled/default
+sudo service nginx restart
+_______________________________________________________________
+
+# This script ensures that the correct configuration is enabled and restarts Nginx to apply the changes.
+the flow diagram
+![image](https://github.com/user-attachments/assets/332da42f-87ec-451f-b01a-9abc221b7f70)
