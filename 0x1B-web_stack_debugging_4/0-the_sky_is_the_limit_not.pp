@@ -1,7 +1,11 @@
-# fix nginx to accept and serve more requests
+#inrease the amount of traffic nginx can handle
 
-exec {'modify max open files limit setting':
-  command => 'sed -i "s/15/4096/" /etc/default/nginx && sudo service nginx restart',
-  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games',
+#increade the ULIMIT of the nginx default
+exec { 'increase-ulimit':
+    command => '/bin/sed -i \'s/ULIMIT="-n 15"/ULIMIT="-n 4096"/\' /etc/default/nginx'
 }
 
+#restart nginx
+exec { 'restart-nginx':
+    command => '/usr/sbin/service nginx restart'
+}
