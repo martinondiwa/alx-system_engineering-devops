@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # nginx likes port 80
 
-cat /etc/ngix/sites-available/default > /etc/nginx/sites-enabled/default
+cat /etc/ngix/sites.available/default > /etc/nginx/sites.enabled/default
 sudo service nginx restart
+rm /run/ngix.pid
